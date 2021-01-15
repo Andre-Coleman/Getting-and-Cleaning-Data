@@ -1,21 +1,13 @@
----
-title: "README"
-author: "Andre Coleman"
-date: "1/15/2021"
-output:
-  pdf_document: default
-  html_document: default
----
-# Background
-This script cleans the UCI HAR dataset per the instructions within the Coursera - Getting and Cleaning Data Course Project.
-Inputs: UCI HAR Dataset (uncompressed)
-Outputs: TXT file of the cleaned data (test/training sets merged, mean and std extracted, descriptive activity names added, labels added and creation of a second dataset with the average for each activity/subject)
+## Andre Coleman, Jr.
+## Getting and Cleaning Data - Coursera
+## January 15, 2021
+##
+## This script cleans the UCI HAR dataset
+## Inputs: UCI HAR Dataset (uncompressed)
+## Outputs: TXT file of the cleaned data (test/training sets merged,
+## mean and std extracted, descriptive activity names added, labels added and
+## creation of a second dataset with the average for each activity/subject)
 
-# Reading in Data Sets
-
-The following code block reads in all of the UCI HAR data sets pertinent to the analysis by changing the active directory and reading in the files via read.fwf.
-
-```{r}
 ## Read in all datasets
 basewd <- getwd() # Recording base directory
 w <- c(rep(16,times=561)) # Building width vector
@@ -34,23 +26,13 @@ ytrain <- read.fwf("y_train.txt", 1)
 subtrain <- read.fwf("subject_train.txt", 2)
 
 setwd(basewd) # Set working directory (base)
-```
 
-# Creating Summary Table (Step 1)
-The following code block collates the subject, y and X data sets together for the train and test data and then collates those two data sets into one data set.
-
-```{r}
 ## Creating summary tables and merging
 test <- cbind(subtest, ytest, xtest) # Create summary table (test)
 train <- cbind(subtrain, ytrain, xtrain) # Create summary table (train)
 
 testtrain <- rbind(test, train) # Merged table (Step 1)
-```
 
-# Renaming Headers and Extracting Mean/Standard Deviation
-The following code block reads in the feature list in order to rename the collated data set header. Following the renaming, the code block extracts the mean() and std() columns and places those columns into another data frame.
-
-```{r}
 ## Renaming headers and extracting mean and std
 setwd(paste0(getwd(), "/UCI HAR Dataset")) # Set working directory (top level)
 features <- read.delim("features.txt", header=FALSE) # Reading in features
@@ -71,12 +53,7 @@ for (i in 3:ncol(testtrain)) {
 }
 namehold <- as.vector(namehold) # Converting to vector
 colnames(testtrainextract) <- namehold # Column extract (Step 2)
-```
 
-# Naming Activities
-The following code block performs a series a modification steps to tidy up the headers and activity labels including removing numbers, underscores and adding appropriate spacing. The code then modifies abbreviations and in the process corrects all spacing to one space.
-
-```{r}
 ## Naming activities
 setwd(paste0(getwd(), "/UCI HAR Dataset")) # Set working directory (top level)
 alabels <- read.delim("activity_labels.txt", header=FALSE) # Read activity labels
@@ -113,12 +90,7 @@ extractname <- gsub("  ", " ", extractname) # Fixing spacing (2)
 extractname <- gsub("   ", " ", extractname) # Fixing spacing (3)
 
 colnames(testtrainextract) <- extractname # Apply names to testtrainextract (Step 3)
-```
 
-# Creating Tidy Data Set
-The final code block creates the tidy data set by systematically going thorugh each subject to return the means of all columns following by the means of each activty. The data is outputted as a text file and csv file.
-
-```{r}
 ## Mean dataset generation (Step 4)
 
 Step4 <- data.frame()
@@ -228,5 +200,4 @@ Step4 <- rbind(Step4, colmeanhold)
 colnames(Step4) <- extractname # Adjust colnames
 write.table(Step4, file = "Project Output.txt") # Output as txt (Step 4)
 write.csv(Step4, file = "Project Output.csv") # Output as csv
-```
 
